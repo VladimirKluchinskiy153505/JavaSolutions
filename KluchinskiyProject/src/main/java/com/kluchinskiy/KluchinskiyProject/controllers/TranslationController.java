@@ -38,7 +38,6 @@ public class TranslationController {
 
         String translatedString = translationService.translate(inputString, sourceLang, targetLang);
 
-        // Сохраняем данные в базу данных
         jdbcTemplate.update(
                 "INSERT INTO translations (ip_address, input_string, translated_string) VALUES (?, ?, ?)",
                 ipAddress, inputString, translatedString

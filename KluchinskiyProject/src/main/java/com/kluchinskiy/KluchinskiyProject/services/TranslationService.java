@@ -45,11 +45,9 @@ public class TranslationService {
                     } catch (Exception e) {
                         throw e;
                     }
-
                 });
                 futures.add(future);
             }
-
             StringBuilder translatedStringBuilder = new StringBuilder();
             for (Future<String> future : futures) {
                 translatedStringBuilder.append(future.get()).append(" ");
