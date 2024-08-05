@@ -1,0 +1,42 @@
+
+@Service
+public class TranslationService {
+
+    private final RestTemplate restTemplate;
+    private final String apiKey = "AQVNxycxNRBKxq_sXqSwXwTdaIRZELLWhA2vuzGU";
+    private final String folderId = "b1gp0q07n8u2bdlchca0";
+
+    public TranslationService() {
+        this.restTemplate = new RestTemplate();
+    }
+
+    public String translate(String input, String sourceLang, String targetLang) {
+        String apiUrl = "https://translate.api.cloud.yandex.net/translate/v2/translate"; // Убедитесь, что URL правильный
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("sourceLanguageCode", sourceLang);
+        requestBody.put("targetLanguageCode", targetLang);
+        requestBody.put("format", "PLAIN_TEXT");
+        requestBody.put("texts", List.of(input)); // Преобразуем в список
+        requestBody.put("folderId", folderId); // Замените на ваш Folder ID
+        requestBody.put("speller", false);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Api-Key " + apiKey);
+
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        ResponseEntity<Map> responseEntity = restTemplate.exchange(apiUrl, HttpMethod.POST, requestEntity, Map.class);
+
+        Map<String, Object> responseBody = responseEntity.getBody();
+        if (responseBody != null) {
+            List<Map<String, String>> translations = (List<Map<String, String>>) responseBody.get("translations");
+            return translations.stream()
+                    .map(translation -> translation.get("text"))
+                    .collect(Collectors.joining(" "));
+        } else {
+            return "Translation error";
+        }
+    }
+}
