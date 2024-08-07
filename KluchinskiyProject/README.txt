@@ -21,3 +21,4 @@ psql -U postgres
 \c translation
 select * from translations;
 был использован https://translate.api.cloud.yandex.net/translate/v2/translate
+В целях безопасности Api-Key был удалён
